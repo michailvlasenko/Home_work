@@ -3,7 +3,6 @@ import random
 import factory
 from faker import Faker
 
-from app.extensions import db
 from app.models import Client, Parking
 
 fake = Faker()
@@ -12,8 +11,6 @@ fake = Faker()
 class BaseFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         abstract = True
-        sqlalchemy_session = db.session
-        sqlalchemy_session_persistence = "commit"
 
 
 class ClientFactory(BaseFactory):
