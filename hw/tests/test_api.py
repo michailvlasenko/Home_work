@@ -1,6 +1,7 @@
 import pytest
 
-from app.models import Client, ClientParking, Parking
+# Измененные импорты
+from models import Client, ClientParking, Parking
 from tests.factories import ClientFactory, ParkingFactory
 
 

@@ -2,10 +2,12 @@ from datetime import datetime
 
 import pytest
 
-from app import create_app
-from app.extensions import db
-from app.models import Client, ClientParking, Parking
+# Измененные импорты - убираем "app."
+from extensions import db
+from models import Client, ClientParking, Parking
 from tests.factories import BaseFactory
+
+from app import create_app
 
 
 def pytest_configure(config):
@@ -43,7 +45,7 @@ def client(app):
 @pytest.fixture
 def db_session(app):
     with app.app_context():
-        yield db.session
+        yield db
 
 
 @pytest.fixture

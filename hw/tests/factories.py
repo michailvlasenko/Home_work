@@ -3,7 +3,8 @@ import random
 import factory
 from faker import Faker
 
-from app.models import Client, Parking
+# Измененный импорт
+from models import Client, Parking
 
 fake = Faker()
 
