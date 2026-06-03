@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from flask import Blueprint, jsonify, request
 
@@ -81,7 +81,7 @@ def park_car():
         return jsonify({"error": "No available places"}), 400
 
     parking.count_available_places -= 1
-    log = ClientParking(client_id=client_id, parking_id=parking_id, time_in=datetime.utcnow())
+    log = ClientParking(client_id=client_id, parking_id=parking_id, time_in=datetime.now(timezone.utc))
     db.session.add(log)
     db.session.commit()
     return jsonify({"message": "Successfully parked", "log_id": log.id}), 201
@@ -103,6 +103,6 @@ def leave_parking():
 
     parking = db.session.get(Parking, parking_id)
     parking.count_available_places += 1
-    log.time_out = datetime.utcnow()
+    log.time_out = datetime.now(timezone.utc)
     db.session.commit()
     return jsonify({"message": "Successfully left", "time_out": log.time_out.isoformat()}), 200
