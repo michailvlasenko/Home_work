@@ -1,10 +1,14 @@
 import random
+import sys
+import os
+
+# Добавляем папку hw в путь поиска модулей
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import factory
 from faker import Faker
 
-# Измененный импорт
-from models import Client, Parking
+from app.models import Client, Parking
 
 fake = Faker()
 

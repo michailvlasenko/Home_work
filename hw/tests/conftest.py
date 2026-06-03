@@ -1,13 +1,17 @@
 from datetime import datetime
 
 import pytest
+import sys
+import os
 
-# Измененные импорты - убираем "app."
-from extensions import db
-from models import Client, ClientParking, Parking
-from tests.factories import BaseFactory
+# Добавляем папку hw в путь поиска модулей
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Теперь импорты работают
+from app.extensions import db
+from app.models import Client, ClientParking, Parking
 from app import create_app
+from tests.factories import BaseFactory
 
 
 def pytest_configure(config):
@@ -45,7 +49,7 @@ def client(app):
 @pytest.fixture
 def db_session(app):
     with app.app_context():
-        yield db
+        yield db.session
 
 
 @pytest.fixture

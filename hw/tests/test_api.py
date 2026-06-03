@@ -1,7 +1,11 @@
 import pytest
+import sys
+import os
 
-# Измененные импорты
-from models import Client, ClientParking, Parking
+# Добавляем папку hw в путь поиска модулей
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from app.models import Client, ClientParking, Parking
 from tests.factories import ClientFactory, ParkingFactory
 
 
@@ -36,16 +40,6 @@ def test_create_parking(client, db_session):
 
 @pytest.mark.parking
 def test_park_car(client, db_session, test_client_id, test_parking_id):
-    # Сначала проверяем, что клиент не активен на этой парковке
-    existing_log = db_session.query(ClientParking).filter_by(
-        client_id=test_client_id, parking_id=test_parking_id, time_out=None
-    ).first()
-
-    if existing_log:
-        # Если есть активная запись, закрываем её
-        existing_log.time_out = db_session.query(ClientParking).first().time_in
-        db_session.commit()
-
     response = client.post("/client_parkings", json={"client_id": test_client_id, "parking_id": test_parking_id})
     assert response.status_code == 201
 
@@ -77,7 +71,7 @@ def test_leave_parking(client, db_session, test_client_id, test_parking_id):
 
 
 @pytest.mark.parking
-def test_leave_parking_no_card(client, db_session, test_parking_id):
+def test_leave_parking_no_card(client, db_session):
     # Создаем клиента без карты
     response = client.post("/clients", json={"name": "NoCard", "surname": "User", "car_number": "X999ZZ"})
     client_id = response.get_json()["id"]
@@ -126,7 +120,7 @@ def test_create_parking_with_factory(client, db_session):
         json={
             "address": new_parking.address,
             "count_places": new_parking.count_places,
-            "count_available_places": new_parking.count_places,  # все места свободны
+            "count_available_places": new_parking.count_places,
             "opened": new_parking.opened,
         },
     )
